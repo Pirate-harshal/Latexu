@@ -1,0 +1,199 @@
+\documentclass[11pt]{exam}
+\printanswers
+\usepackage{amsmath,amssymb,complexity}
+\usepackage{datetime,enumerate,palatino}
+\usepackage{setspace}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+\newcommand{\N}{{\mathbb{N}}}
+\newcommand{\bool}{\{0,1\}}
+\newcommand{\owf}{\mathsf{OWF}}
+\newcommand\myeq{\mathrel{\overset{\makebox[0pt]{\mbox{\normalfont\tiny\sffamily def}}}{=}}}
+\begin{document}
+\setstretch{1.1}
+
+\hrule
+\vspace{3mm}
+\noindent
+{\sf IITM-CS6111 : Foundations of Cryptography  \hfill Assignment \#2 }
+\vspace{3mm} \\
+\noindent
+{\sf Topic: One-way functions \hfill}
+\vspace{3mm}
+\hrule
+
+\hrule
+\vspace{3mm}
+\noindent
+{\sf Roll No: CS14B043 \hfill Full Name: Harshal Gawai}
+\vspace{3mm}
+\hrule
+
+{\small 
+\begin{itemize}
+\itemsep 0pt
+\item All answers must be written in mathematically rigorous form.
+\item Use LaTeX to generate the pdf file of your solution. \textbf{NO} photographs/scanned copies of hand written solutions are accepted. 
+\item Students are allowed to form groups (maximum of $3$ members) for this assignment. However, referring to internet etc is strictly disallowed.
+\item Submit solutions at moodle link before the deadline one per team. Clearly mention the names and roll numbers of all the teammates involved.
+\end{itemize}
+}
+% uncomment the lines below and fill name and roll number of teammates here
+
+
+
+\begin{questions}
+
+\question[10] 
+Prove that there is no one-way function $f\colon\bool^n\to \bool^{\lfloor \log n \rfloor}$.
+%\begin{solution}
+%    Uncomment the lines above and below and write your solution here
+%\end{solution}
+\question[10]
+
+Prove or disprove: If $f:\bool^n\to\bool^n$ is a one-way function, then the function $g:\bool^n\to\bool^{n-\lfloor \log n \rfloor}$ which outputs the $n-\lfloor \log n \rfloor$ higher order bits of $f$ is also a one-way function. (i.e $\forall x \in \bool^n$, if $f(x)=b_1b_2\cdots b_n$ then $g(x)=b_1b_2\cdots b_{n-\lfloor \log n \rfloor}$)
+%\begin{solution}
+%    Uncomment the lines above and below and write your solution here
+%\end{solution}
+
+\question[10]({\bf Expanding $\owf$s}) Prove that if $f$ is a one-way function, then the function $g$ defined by $g(x_1,x_2)\myeq\left(f(x_1),x_2\right)$ where $|x_1|=|x_2|$, is also a one-way function. Observe that $g$ reveals half of its input, but is nevertheless one-way.
+% \begin{solution}
+%     Let's assume \textbf{g} is not one-way function.\\
+%     But, since \textbf{g} is computable in polynomial time if f is, so there
+%     is a probabilistic polynomial-time algorithm \textbf{\emph A} and a positive polynomial $q(n)$ such that\\
+%     \begin{align}
+%         Pr[Invert_{(A,g)}(n)=1 \geq 1/q(n)]
+%     \end{align}
+%     We construct a ppt-algorithm Â as follows:\\
+%     When Â is given $1^{n}$ and y as input, it uniformly chooses x ← $\{0, 1\}^n$ , and then simulates A on input $1^{2n}$ and (x, y).\\
+%     The output of Â is then simply the second half of the output of A.\\
+%     Whenever \textbf{\emph A} successfully inverts g on (x, y), i.e. it outputs (x, x' ) with f (x' ) = y, then Â successfully inverts y.\\
+%     Hence, the success probability of Â is at least that of A, and hence non-negligible.\\
+%     Thus, f is not one-way, which is a contradiction.\\
+%     Hence, $g$ defined by $g(x_1,x_2)\myeq\left(f(x_1),x_2\right)$ is also one-way function.\\
+    
+% \end{solution}
+\begin{solution}
+    Here, $g(x_1,x_2)\myeq\left(f(x_1),x_2\right)$\\
+    Where, $g:\{0,1\}^n \rightarrow \{0,1\}^{n+l(n)}$\\
+    $f$ is a one-way function. $f:\{0,1\}^n \rightarrow \{0,1\}^{l(n)}$\\
+    \\
+    Assume $g$ is not a one-way function\\
+    $\implies \exists$ an $A$ such that\\
+    \begin{align*}
+        &\Pr\limits_{x_1\leftarrow\{0,n\}^n, x_2\leftarrow\{0,n\}^n}[A(g(x_1,x_2)) = g^{-1}(g(x_1,x_2))] > \frac{1}{P(n)}\\
+        \implies &\Pr\limits_{x_1\leftarrow\{0,n\}^n, x_2\leftarrow\{0,n\}^n} [g(A(f(x_1),x_2)) = g(x_1,x_2)] > \frac{1}{P(n)}\\
+        \implies &\Pr\limits_{x_1\leftarrow\{0,n\}^n, x_2\leftarrow\{0,n\}^n}
+        [A(f(x_1) , x_2)[2n:n+1], f(A(f(x_1),x_2)[n:1]) = (f(x_1),x_2)] > \frac{1}{p(n)}\\
+        \implies &\Pr\limits_{x_1\leftarrow\{0,n\}^n, x_2\leftarrow\{0,n\}^n}
+        [f(A(f(x_1),x_2)[2n:n+1]) = f(x_1)] > \frac{1}{P(n)}\\
+        \implies &\Pr\limits_{x_1\leftarrow\{0,n\}^n}
+        [A'(f(x_1)) = f^{-1}(f(x_1))] > \frac{1}{P(n)}
+    \end{align*}
+    Here $A'$ takes $f(x_1)$, where $|f(x_2 = l(n))|$ as input calculates $n$ in polynomial time and then, $A'$ uniformly selects an $x_2 \leftarrow \{0,1\}^n$ and outputs $A(f(x_1),x_2)$\\
+    Hence, from the previous conclusion, $A'$ inverts $f$ with non-negligible probability.\\
+    That means, $f$ is not a one-way\\
+    $\implies$ from contradiction\\
+    Therefore,  $g$ is one-way function
+    
+\end{solution}
+
+\question[10]({\bf Composition of $\owf$s}) Let $f$ be a one-way function. Is $g(x)\myeq f(f(x))$ necessarily a one-way function? What about $g'(x)\myeq f(x)||f(f(x))$? Prove your answers.
+\begin{solution}\\
+    Let $f$ be a one-way function. \\
+    (a) Is $g(x)\myeq f(f(x))$ necessarily a one-way function?\\
+    (b) What about $g'(x)\myeq f(x)||f(f(x))$?\\
+    \textbf{(a)} \\
+    \emph{The function g is not necessarily one-way}\\
+    Let h be a length-preserving one-way function and define $f(x)$ as follows:\\
+    If $x_{n/2+1} ... x_n = 0^{n/2}$, , then $f(x) = 0^{\mid x\mid}$\\
+    Else, $f(x) = h(x_1 · · · x_n/2 )0^{n/2}$ .\\
+    Clearly, $f$ is length preserving. \\
+    We now show that it is one-way.\\
+    Intuitively, any adversary inverting $f$ can be used to invert $h$.
+    Formally, assume that there exists a PPT adversary $A$ and a polynomial $p$ such that for infinitely many $n’s$
+    \begin{align}
+        Pr[A(f(U_n)) \in f^{-1}(f(U_n))] \geq \frac{1}{p(n)}
+    \end{align}\\
+    Then, let $A^{'}$ be an adversary who receives a value $y \in \bool^{n/2}$ and attempts to find a value $x \in h^{−1} (y)$.\\
+    The adversary $A^{'}$ just invokes $A$ upon input $y0^{n/2}$ and outputs the first $n/2$ bits of $A$’s output.\\
+    We now analyze the success probability of $A^'$ . First, denote $S_n = \{ x \mid x_{n/2+1} · · · x_n = 0^{n/2} \}$ and note that $Pr[U_n \in S_n ] = 2^{−n/2}$ . Next, note that
+    \begin{align}
+        Pr[A^{'}(h(U_{n/2} )) \in h^{-1}(h(U_{n/2} ))] = Pr[A(f(U_{n} )) \in f^{-1}(f (U_n )) \mid U_n \notin S_n ]
+    \end{align}
+    Now,\\
+    \begin{align*}
+        Pr[A(f (U_n )) \in f^{-1} (f (U_n ))] &= Pr[A(f (U_n )) \in f^{-1} (f (U_n )) \mid U_n \in S_n ] . Pr[U_n \in S_n ]\\
+        &+ Pr[A(f (U_n )) \in f^{-1} (f (U_n )) \mid U_n \notin S_n ] . Pr[U_n \notin S_n ]\\
+        &\leq Pr[U_n \in S_n ] + Pr[A(f (U_n )) \in f^{-1} (f (U_n )) \mid U_n \notin S_n ]\\
+        &= Pr[U_n \in S_n ] + Pr[A^{'} (h(U_{n/2} )) \in h^{-1} (h(U_{n/2} ))]\\
+        &= \frac{1}{2^{n/2}} + Pr[A^{'} (h(U_{n/2} )) \in h^{-1} (h(U_{n/2} ))]
+    \end{align*}
+    We therefore have that\\
+    \begin{align*}
+        Pr[A^{'} (h(U_{n/2} )) \in h^{-1} (h(U_{n/2} ))] &\geq Pr[A(f (U_n )) \in f^{-1} (f (U_n ))] - \frac{1}{2^{n/2}}\\
+        &\geq \frac{1}{p(n)} - \frac{1}{2^{n/2}} \geq \frac{1}{q(n)}
+    \end{align*}
+    for some polynomial $q$. Since $A^{'}$ is PPT, this contradicts the assumption that $h$ is a one-way function. We therefore conclude that $f$ is one-way.\\
+    Since, we have established that $f$ is one-way, only thing remaining to show is that $g$ is not one-way.\\
+    $\forall x, f (f (x)) = 0^{\mid x\mid}$ (because the last $n/2$ bits of $f (x)$ equal zero, and so $f (f (x))$ equals $0^{\mid x\mid}$ )\\
+    Since, it is easy to find a preimage of $0^{\mid x\mid}$ under $g$ (just take $0^{\mid x\mid}$ )\\\\
+    Therefore, we have that $g(x) = f (f (x))$ is not one-way.\\
+    
+    \textbf{(b) Is $g'(x)\myeq f(x)||f(f(x))$? one way function?}\\
+    The $g'(x)\myeq f(x)||f(f(x))$ is not necessarily an OWF\\
+    Let's prove be counter-example\\
+    By intution, it seems that $f^{'}:x \rightarrow f(x)\mid\mid f(f(x))$ is not necessarily a OWF when $f$ is not length-preserving.\\
+    Consider the following function $f$:\\
+    Let $h$ be an arbitrary length-preserving OWF. $g$ is an arbitrary OWF that compresses its input by a factor two.\\
+    $f$ is defined as follows: on input $x$,\\
+    
+    if $\mid x\mid$ is-odd, then $f(x)=0^{\mid x\mid} \mid\mid h(x)$\\
+    else if $\mid x \mid$ is even, then if $\mid x\mid/2$ is also even and $x$ is of the form $x^{'} \mid\mid 0^{3\mid x\mid/4}$, return $x^{'}\mid\mid 0^{\mid x\mid/4}$.\\
+    Otherwise, if $x$ is of the form $x^{''}\mid\mid 0^{\mid x\mid/2}$, return $h(x^{''})$. In all other cases, return $g(x)$.\\
+    So, $f$ maps n-bit inputs to $n/2$-bit outputs when $n$ is even\\
+    And, to 2n-bit outputs when $n$ is odd.\\
+    one can prove that $f$ is indeed an OWF by picking an appropriate function $g$ whose image does not intersect with $\{0\}^{n}*\{0,1\}^n$\\
+    So that on a random input $x$, the probability that $g(x)$ is of the form $x^{'} \mid\mid 0^{3\mid x\mid/4}$ is very small. (i.e. Easy to invert)\\
+    Now, let $n = 2 mod 4$ (n is even, and n/2 is odd).\\
+    Then when one receives $y=f(x)$ for a random n-bit input $x$,\\
+    it is easy to invert $y \mid\mid f(y)$: with very good probability\\
+    Here, $x$ is not of the form $x^{'} \mid\mid 0^{3\mid x\mid/4}$ \\
+    hence $f(x)=g(x)$ (which is of odd length n/2). \\
+    In this case it holds that $f(y)=0^{n/2} \mid\mid h(y)$. \\
+    But this makes inverting $y \mid \mid f(y)$ trivial:\\
+    $y \mid \mid f(y) = y \mid \mid (0^{n/2} \mid\mid h(y)) = (y \mid \mid 0^{n/2}) \mid\mid h(y)= f(y\mid\mid 0^{3n/2})\mid\mid f(f(y\mid\mid 0^{3n/2})) $ \\
+    Hence one can simply return $y\mid\mid 0^{3n/2}$ to successfully invert $f^{'}:x \rightarrow f(x)\mid\mid f(f(x))$\\
+    Therefore, $f^{'}:x \rightarrow f(x)\mid\mid f(f(x))$ is not necessarily a OWF when $f$ is not length-preserving.
+\end{solution}
+
+\question[10]({\bf Length preserving $\owf$}) Prove that if there exists a one way function, then there exists a length preserving one-way function.
+
+\emph{Hint: Let $f$ be a one-way function and and let $p(.)$ be a polynomial such that $|f(x)|\leq p(|x|)$. (Justify the existence of $p$.) Define $f'(x)\myeq f(x)||10^{p(|x|)-|f(x)|}$. Further modify $f'$ to get a length-preserving function that remains one-way.}
+\begin{solution}
+    Let's assume that $g$ is a strong one-way function.\\
+    we will now construct a length preserving oneway function $f$.\\
+    Since $g$ is one-way, there exist polynomial ${p(.)}$ s.t. $\mid g(x)\mid \leq p(\mid x \mid)$ $\forall x$\\
+    Define:\\
+    \begin{align*}
+    g'(x) = g(x)\mid \mid 10\textsuperscript{$p(\mid x \mid)-\mid g(x) \mid$}
+    \end{align*}
+    this function always has $\mid g^{'}(x)\mid= p(\mid x\mid)$ and it is trivially strongly one way.\\
+    Now, one has to force $\mid x \mid = \mid f(x) \mid$\\
+    This one can do by taking $p(\mid x\mid)$ bits as input and taking only $\mid x\mid$ of it into account, i.e\\
+    \begin{align*}
+        f(x\mid\mid y) = g^{'}(x) for \mid y \mid = p(\mid x \mid) - \mid x \mid + 1
+    \end{align*}
+    Strong one-wayness of \textbf{f} follows from the strong one-wayness of $g^{'}$.\\\\
+    Had \textbf{f} not been strongly one way, we could query a PPT adversary of \textbf{f} for $z = f(y)$ get $x = x_1 \mid\mid . . . \mid\mid x_n$ back and try for each $m \in [n]$ whether $g^{'}(x_1\mid\mid . . . \mid\mid x_m) = z$ \\
+    and eventually find a preimage of \textbf{z} under $g'$ in polynomial time with non negligible probability.\\
+    Hence the contradiction.\\
+    Therefore, if there exists a one way function, then there exists a length preserving one-way function.\\
+    
+\end{solution}
+
+\end{questions}
+\end{document}
+
+

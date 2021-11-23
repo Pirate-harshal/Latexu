@@ -1,0 +1,142 @@
+
+\documentclass[11pt]{exam}
+\printanswers
+\usepackage{amsmath,amssymb,complexity}
+\usepackage{datetime,enumerate,palatino}
+\usepackage{setspace}
+
+\newcommand{\F}{{\mathbb{F}}}
+\newcommand{\Z}{{\mathbb{Z}}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand\tab[1][1cm]{\hspace*{#1}}
+\newcommand\myeq{\mathrel{\stackrel{\makebox[0pt]{\mbox{\normalfont\tiny def}}}{=}}}
+    
+\begin{document}
+\setstretch{1.1}
+
+\hrule
+\vspace{3mm}
+\noindent
+{\sf IITM-CS6111 : Foundations of Cryptography  \hfill Assignment \#3 }
+\vspace{3mm} \\
+\noindent
+{\sf Topic: OFWs and PRGs\hfill}
+\vspace{3mm}
+\hrule
+
+\hrule
+\vspace{3mm}
+\noindent
+{\sf Roll No: CS14B043 \hfill Full Name: Harshal Gawai} 
+\vspace{3mm}
+\hrule
+
+{\small 
+\begin{itemize}
+\itemsep 0pt
+\item All answers must be written in mathematically rigorous form.
+\item It is recommended to use LaTeX to generate the pdf file of your solution. However, scanned copies of hand written solutions are also accepted. In the latter case, it's the duty of the individual to make his/her solutions clearly visible and un-ambiguous.
+\item Students are allowed to form groups (maximum of $3$ members) for this assignment. However, referring to internet etc is strictly disallowed.
+\item Submit solutions at moodle link before the deadline one per team. Clearly mention the names and roll numbers of all the teammates involved.
+\end{itemize}
+}
+% uncomment the lines below and fill name and roll number of teammates here
+
+
+\begin{questions}
+\question[10]  
+Let $f$ be a one-way function. Let $B(x)$ be the inner product modulo $2$ of first $\lfloor \frac{|x|}{2} \rfloor$ bits with last $\lfloor \frac{|x|}{2} \rfloor$ bits. Thus, $B:\{0,1\}^* \to \{0,1\}$. $B(x_1x_2...x_k||y_1y_2...y_k)=(\Sigma_{i=1}^k x_i \times y_i) \mod 2$. Is $B$ a hard-core predicate for $f$?
+\begin{solution}\\
+    Let $h$ be a one-way function\\
+    Let $f(x) = B(x) \mid\mid h(x)$\\
+    Its given that $f$ is one-way function\\
+    Let's assume $f$ is not one-way\\
+    $\implies$ $\exists C$, $Pr[f(C(f(x))) = f(x)] \geq P(x)$\\
+    $C'(h(x)) = C(y\mid\mid h(x))$\\
+    Consider,
+    \begin{align*}
+        Pr[h(C'(h(x))) = h(x)] \\
+        &= \frac{1}{2}Pr[h(C(1\mid\mid h(x))) = h(x)] + \frac{1}{2}Pr[f(C(0\mid\mid f(x))) = f(x)]\\
+        &\geq \frac{P(x)}{2}\\
+    \end{align*}
+    $\implies f$ is a one-way function\\
+    Since, $f=(B(x),h(x))$ be definition \\
+    $\implies$ B is not a hard-core predicate of $f$
+\end{solution}
+
+\question[10] 
+Assuming the existence of one-way functions, prove that there exists a one-way function $f$ such that \textit{no} single bit of the pre-image constitutes a hard-core predicate. 
+%\begin{solution}
+%    Uncomment the lines above and below and write your solution here
+%\end{solution}
+
+\question[10] 
+Let $G$ be a pseudorandom generator and let $h$ be a polynomial-time-computable permutation (over strings of the same length). Prove that $G'$ and $G''$ defined by $G'(s)=h(G(s))$ and $G''(s)=h(G(s))$ are both pseduorandom generators. 
+%\begin{solution}
+%    Uncomment the lines above and below and write your solution here
+%\end{solution}
+
+\question[10]  
+Suppose that $G$ is a pseudorandom generator and consider the following modifications to it:
+\begin{enumerate}
+    \item $G'(s)=0^{|G(s)|}$ if the number of $1$'s in $s$ is exactly $\frac{|s|}{2}$ and $G'(s)=G(s)$ otherwise.
+    \item $G''(s)=0^{|G(s)|}$ if the number of $1$'s in $s$ is exactly $\frac{|s|}{3}$ and $G''(s)=G(S)$ otherwise. 
+\end{enumerate}
+%\begin{solution}
+%    Uncomment the lines above and below and write your solution here
+%\end{solution}
+
+\question[10]  
+Refute the following conjecture: For every pseduorandom generator $G$ the function $G'(s)=G(s) \oplus s0^{|G(s)|-|s|}$ is also a pseudorandom generator. 
+\begin{solution}
+    Let's solve this problem by counter-example method\\
+    $G(r,s) = (r,g(s))$\\
+    $G\colon \{0,1\}^{2n} \rightarrow \{0,1\}^{n+l(n)}$\\
+    Here $g$ is pseudorandom generator(PRG) $g\colon \{0,1\}^n \rightarrow \{0,1\}^{l(n)}$\\
+    Step 1:\\
+    $G$ is also a PRG\\
+    Lets assume $G$ is not a PRG\\
+    $\implies \exists $ \tab[0.5cm] a $D_G$ such that,\\
+%    $\max_{1 \leq j \leq n}$, 
+%    $\max\limits_{1 \leq j \leq n xyz}$
+    \begin{align*}
+        &\Pr\limits_{r\leftarrow \{0,1\}^n, s\leftarrow\{0,1\}^n}[D_G(G(r,s))=1] - \Pr\limits_{y\leftarrow\{0,1\}^n,z\leftarrow\{0,1\}^{l(n)}}[D_G(y \mid\mid z) = 1] > \frac{1}{P(n)}\\
+        &\Pr\limits_{r\leftarrow \{0,1\}^n, s\leftarrow\{0,1\}^n}[D_G(G(r,g(s)))=1] - \Pr\limits_{y\leftarrow\{0,1\}^n,z\leftarrow\{0,1\}^{l(n)}}[D_G(y \mid\mid z) = 1] > \frac{1}{P(n)}\\
+        &\Pr\limits_{s\leftarrow\{0,1\}^n}[D_g(G(g(s)))=1] - \Pr\limits_{z\leftarrow\{0,1\}^{l(n)}}[D_g(z) = 1] > \frac{1}{P(n)}\\
+    \end{align*}
+    $D_g$ given an input of length $xl(n)$,\\
+    Calculates $n$ in polynomial time\\
+    And, uniformly selects an $r \leftarrow \{0,1\}^n$ and outputs $D_G(r,x)$\\
+    Clearly, $D_g$ distinguishes between $g$ and a truly random number\\
+    $\implies$ $g$ is not a pseudorandom Generator.\\
+    This is contradicton.\\
+    Therefore, $G$ is a pseudorandom Generator.\\\\
+    \textbf{Step 2:}\\\\
+    $G'(s) &\myeq G(s) \oplus s0^{|G(s)|-|s|}$ is not a pseudorandom generator.\\
+    \begin{align*}
+        G'(s) &= G(s) \oplus s0^{|G(s)|-|s|}\\
+        &= (x,g(y)) \oplus (x,y)0^{|G(x,y)-2n}....Let-s=(x,y)\\
+        &= 0^{|n|} || g(y) \oplus y0^{l(n)-n}
+    \end{align*}
+    Consider $D$:\\
+    $D$ takes input $x$, $|x| = n+l(n)$\\
+    $D$ calculates $n$ in polynomial time.\\
+    $D$ outputs $1$ if $1^{st}$ $n$ bits of $x$ are all zeroes\\
+    $D$ outputs $0$ otherwise\\
+    Consider,\\
+    \begin{align*}
+    \mid \Pr\limits_{r\leftarrow\{0,n\}^n, s\leftarrow\{0,n\}^n}[D(G'(r,s))=1] &- \Pr\limits_{x\leftarrow\{0,n\}^n, y\leftarrow\{0,n\}^n}[D(x,y)=1]\mid\\
+    &= \mid 1-[Pr(x=0^n)[1] - Pr(x\neq 0^n).(0)]\\
+    &= \mid 1 - [Pr(x=0^n)[1] - Pr(x\neq0^n).(0)]\mid\\
+    &= 1 - \frac{2^{l(n)}}{2^{n+l(n)}} = 1 - \frac{1}{2^n}
+    \end{align*}
+    We can see that $D$ breaks $G'$\\
+    Therefore, $G'$ is not necessarily a pseudorandom Generator\\
+    
+\end{solution}
+%a &\myeq b \\
+\end{questions}
+\end{document}
+
+
